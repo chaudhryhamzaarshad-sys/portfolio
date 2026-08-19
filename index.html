@@ -1,1 +1,26 @@
-<!DOCTYPE html><html><head><title>My Portfolio</title></head><body><h1>Welcome to My Portfolio</h1></body></html></h1></body></title></head></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaudhry Hamza Arshad - Portfolio</title>
+    <style>
+        :root { --bg: #ffffff; --text: #333333; }
+        [data-theme="dark"] { --bg: #1a1a1a; --text: #ffffff; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; transition: 0.3s; }
+        .toggle-btn { padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
+    <h1>Chaudhry Hamza Arshad</h1>
+    <h2>Supply Chain Specialist</h2>
+    <p>Experienced professional with a strong background in supply chain management, logistics optimization, and procurement strategy.</p>
+    <script>
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        }
+    </script>
+</body>
+</html>
