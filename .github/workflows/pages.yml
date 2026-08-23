@@ -23,12 +23,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Prepare downloadable resume
-        run: |
-          cat .resume/c*.b64 | base64 --decode > Hamza_Arshad_Resume.pdf
-          rm -rf .resume
-
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
