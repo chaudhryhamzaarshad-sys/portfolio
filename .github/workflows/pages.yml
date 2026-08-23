@@ -23,12 +23,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Build downloadable resume
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .resume/c*.b64 | tr -d '\n\r ' | base64 --decode > Hamza_Arshad_Resume.pdf
+          test -s Hamza_Arshad_Resume.pdf
+          test "$(head -c 4 Hamza_Arshad_Resume.pdf)" = "%PDF"
+          rm -rf .resume
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
