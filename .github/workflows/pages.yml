@@ -27,21 +27,6 @@ jobs:
       - name: Prepare downloadable resume
         run: |
           cat .resume/c*.b64 | base64 --decode > Hamza_Arshad_Resume.pdf
-          echo "7f3ff925b118823430468da8c307078a1ca3ff1dee2f6c7b69a62e3349ef4073  Hamza_Arshad_Resume.pdf" | sha256sum -c -
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("index.html")
-          html = path.read_text(encoding="utf-8")
-          linkedin = '<a class="btn ghost" href="https://www.linkedin.com/in/chaudhryhamzaarshad" target="_blank">LinkedIn ↗</a>'
-          download = '<a class="btn ghost" href="Hamza_Arshad_Resume.pdf" download="Hamza_Arshad_Resume.pdf">Download Resume ↓</a>'
-
-          # Add the resume button after LinkedIn in both the hero and contact sections.
-          if download not in html:
-              html = html.replace(linkedin, linkedin + download)
-
-          path.write_text(html, encoding="utf-8")
-          PY
           rm -rf .resume
 
       - name: Configure Pages
