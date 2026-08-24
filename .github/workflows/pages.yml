@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -23,10 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Build premium visual portfolio
+      - name: Build approved premium portfolio
         shell: bash
         run: |
           set -euo pipefail
@@ -36,37 +34,7 @@ jobs:
           grep -q 'id="additional-experience"' index.html
           grep -q 'aria-label="Instagram"' index.html
           grep -q 'Cloudflare' index.html
-
-      - name: Persist premium portfolio to main for Vercel
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if ! git diff --cached --quiet; then
-            git commit -m "Deploy premium visual portfolio"
-            git push origin HEAD:main
-          else
-            echo "Premium portfolio is already stored in index.html"
-          fi
-
-      - name: Build downloadable resume
-        shell: bash
-        run: |
-          set -u
-          rm -f Hamza_Arshad_Resume.pdf resume.tmp.pdf
-          if compgen -G '.resume/c*.b64' > /dev/null; then
-            if cat .resume/c*.b64 | tr -d '\n\r ' | base64 --decode > resume.tmp.pdf 2>/dev/null \
-              && test -s resume.tmp.pdf \
-              && test "$(head -c 4 resume.tmp.pdf)" = "%PDF"; then
-              mv resume.tmp.pdf Hamza_Arshad_Resume.pdf
-            else
-              rm -f resume.tmp.pdf Hamza_Arshad_Resume.pdf
-              echo 'Resume reconstruction failed; site deployment will continue without a broken PDF.'
-            fi
-          fi
-          rm -rf .resume .site
+          rm -rf .site .resume
 
       - name: Add favicon
         shell: bash
