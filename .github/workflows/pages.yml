@@ -24,75 +24,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Add additional professional experience
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("index.html")
-          html = path.read_text(encoding="utf-8")
-
-          if 'id="additional-experience"' not in html:
-              start = html.index('<section id="experience">')
-              end = html.index('<section class="impact" id="projects">')
-              experience = html[start:end]
-              closing = '</div></div></section>\n'
-
-              additional = '''</div><div id="additional-experience" style="margin-top:48px;padding-top:36px;border-top:1px solid var(--line)"><div class="label">Additional Experience</div><h2 style="font-size:32px;margin:8px 0 10px">Additional professional experience</h2><p style="color:var(--muted);max-width:760px;margin:0 0 24px">Project management, finance and relationship-management roles outside my core supply chain career.</p><div class="jobs"><article class="job"><div class="jobTop"><div><h3>Lead Project Manager</h3><div class="company">Smart Art Studios</div></div><span class="date">01/2018 – 03/2021</span></div><ul><li>Led end-to-end project management for multiple concurrent client engagements, managing scope, timelines, budgets and deliverables.</li><li>Coordinated and supervised distributed teams of designers, developers, writers and researchers, ensuring alignment with project objectives and client requirements.</li><li>Developed project plans, work breakdown structures, schedules and risk mitigation strategies, consistently delivering projects on time and within budget.</li><li>Tracked plan-versus-actual delivery performance across timelines, effort and milestones, analyzing variances and improving forecasted delivery accuracy for future projects.</li><li>Acted as the primary client-facing point of contact, gathering requirements, managing expectations and ensuring high levels of customer satisfaction.</li></ul></article><article class="job"><div class="jobTop"><div><h3>Financial Accountant</h3><div class="company">Jaspal Construction Company</div></div><span class="date">01/2017 – 06/2017</span></div><ul><li>Prepared monthly profit and loss statements, balance sheets, and reconciliations, ensuring accuracy and compliance.</li><li>Developed project budgets and forecasts, supporting informed financial decision-making.</li><li>Filed and reported monthly tax payments, maintaining adherence to legal requirements.</li></ul></article><article class="job"><div class="jobTop"><div><h3>Relationship Manager</h3><div class="company">Standard Chartered</div></div><span class="date">01/2016 – 05/2017</span></div><ul><li>Collaborated with product, credit risk and operations teams to structure financial solutions and process credit proposals.</li><li>Conducted financial assessments and cross-sold products such as personal loans, credit cards, insurance and mutual funds.</li><li>Ensured compliance with policies while delivering exceptional customer service and maintaining long-term client relationships.</li></ul></article></div></div></div></section>\n'''
-
-              if closing not in experience:
-                  raise SystemExit("Experience section closing markup was not found")
-
-              experience = experience.rsplit(closing, 1)[0] + additional
-              html = html[:start] + experience + html[end:]
-              path.write_text(html, encoding="utf-8")
-          PY
-
-      - name: Expand technical skills
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("index.html")
-          html = path.read_text(encoding="utf-8")
-
-          skills_start = html.index('<section id="skills">')
-          skills_end = html.index('<section id="education">')
-          skills = '''<section id="skills"><div class="wrap"><div class="head"><div><div class="label">Technical Skills</div><h2>Enterprise systems, analytics &amp; digital toolkit</h2></div><p>A comprehensive toolkit supporting supply chain execution, analytics, planning, workflow automation, collaboration and digital development.</p></div><div class="skillGrid"><div class="skill"><h3>ERP &amp; Data Management</h3><div class="chips"><span class="chip">SAP GUI</span><span class="chip">SAP MM</span><span class="chip">SAP S/4HANA</span><span class="chip">SAP BW</span><span class="chip">SAP Ariba Buying</span><span class="chip">Microsoft Dynamics 365</span><span class="chip">Microsoft Dynamics AX</span><span class="chip">Microsoft Dynamics GP</span><span class="chip">Microsoft Dynamics CRM</span><span class="chip">Oracle NetSuite</span><span class="chip">Kinaxis RapidResponse</span><span class="chip">Basware</span><span class="chip">QuickBooks</span><span class="chip">Salesforce</span><span class="chip">Workday</span><span class="chip">IBM Tririga</span><span class="chip">Crunchtime</span></div></div><div class="skill"><h3>Analytics, BI &amp; Reporting</h3><div class="chips"><span class="chip">Microsoft Power BI</span><span class="chip">Python</span><span class="chip">Tableau</span><span class="chip">Google Analytics</span><span class="chip">SPSS</span><span class="chip">EViews</span><span class="chip">ACADiA</span><span class="chip">SQL</span></div></div><div class="skill"><h3>AI Productivity &amp; Tooling</h3><div class="chips"><span class="chip">Google Gemini</span><span class="chip">OpenAI ChatGPT</span><span class="chip">Codex</span><span class="chip">Anthropic Claude</span><span class="chip">Google Antigravity</span><span class="chip">Google AI Studio</span><span class="chip">Cursor</span><span class="chip">Grok</span><span class="chip">Prompt Engineering</span><span class="chip">Advanced Prompting</span><span class="chip">AI-Assisted Data Analysis</span><span class="chip">Workflow Automation</span></div></div><div class="skill"><h3>Project &amp; Workflow Management</h3><div class="chips"><span class="chip">Microsoft Project</span><span class="chip">Asana</span><span class="chip">Jira</span><span class="chip">Trello</span><span class="chip">Smartsheet</span><span class="chip">Zoho</span><span class="chip">Client Central</span></div></div><div class="skill"><h3>Productivity, Collaboration &amp; Digital Tools</h3><div class="chips"><span class="chip">Microsoft 365</span><span class="chip">SharePoint</span><span class="chip">Google Workspace</span><span class="chip">Prezi</span><span class="chip">Google AdSense</span></div></div><div class="skill"><h3>Design &amp; Web Development Tools</h3><div class="chips"><span class="chip">GitHub</span><span class="chip">Cloudflare</span><span class="chip">Vercel</span><span class="chip">Adobe Photoshop</span><span class="chip">Adobe Dreamweaver</span><span class="chip">Adobe Illustrator</span><span class="chip">WordPress</span></div></div></div></div></section>\n'''
-          html = html[:skills_start] + skills + html[skills_end:]
-
-          path.write_text(html, encoding="utf-8")
-          PY
-
-      - name: Add social icons to footer
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("index.html")
-          html = path.read_text(encoding="utf-8")
-
-          if 'aria-label="Instagram"' not in html:
-              old = '<footer><div class="wrap foot"><span>© 2026 Hamza Arshad, MBA</span><span>Supply Chain • Inventory Management • Demand Planning • Procurement</span></div></footer>'
-              new = '''<footer><div class="wrap foot" style="align-items:center;gap:16px;flex-wrap:wrap"><span>© 2026 Hamza Arshad, MBA</span><span style="display:flex;align-items:center;gap:14px"><span>Supply Chain • Inventory Management • Demand Planning • Procurement</span><span style="display:inline-flex;align-items:center;gap:10px"><a href="https://www.instagram.com/chaudhryhamzaarshad" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--line);border-radius:10px;color:var(--muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a><a href="https://www.facebook.com/chaudhryhamzaarshad" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--line);border-radius:10px;color:var(--muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.7 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5H17V3.9c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1V10H8v3h2.6v8h3.1Z"/></svg></a></span></span></div></footer>'''
-              if old not in html:
-                  raise SystemExit("Expected footer markup was not found in index.html")
-              html = html.replace(old, new)
-              path.write_text(html, encoding="utf-8")
-          PY
-
-      - name: Build downloadable resume
-        continue-on-error: true
+      - name: Build premium visual portfolio
         shell: bash
         run: |
           set -euo pipefail
-          cat .resume/c*.b64 | tr -d '\n\r ' | base64 --decode > Hamza_Arshad_Resume.pdf
-          test -s Hamza_Arshad_Resume.pdf
-          test "$(head -c 4 Hamza_Arshad_Resume.pdf)" = "%PDF"
+          tr -d '\n\r ' < .site/premium-index.html.gz.b64 | base64 --decode | gzip -dc > index.html
+          grep -q 'id="visuals"' index.html
+          grep -q 'Transformation Dashboard' index.html
+          grep -q 'id="additional-experience"' index.html
+          grep -q 'aria-label="Instagram"' index.html
+          grep -q 'Cloudflare' index.html
+          rm -rf .site
+
+      - name: Build downloadable resume
+        shell: bash
+        run: |
+          set -u
+          rm -f Hamza_Arshad_Resume.pdf resume.tmp.pdf
+          if compgen -G '.resume/c*.b64' > /dev/null; then
+            if cat .resume/c*.b64 | tr -d '\n\r ' | base64 --decode > resume.tmp.pdf 2>/dev/null \
+              && test -s resume.tmp.pdf \
+              && test "$(head -c 4 resume.tmp.pdf)" = "%PDF"; then
+              mv resume.tmp.pdf Hamza_Arshad_Resume.pdf
+            else
+              rm -f resume.tmp.pdf Hamza_Arshad_Resume.pdf
+              echo 'Resume reconstruction failed; site deployment will continue without a broken PDF.'
+            fi
+          fi
           rm -rf .resume
+
+      - name: Add favicon
+        shell: bash
+        run: |
+          if [ ! -f favicon.svg ]; then
+            cat > favicon.svg <<'SVG'
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0b1726"/><text x="32" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#ffffff">HA</text></svg>
+          SVG
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
