@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Build approved premium portfolio
         shell: bash
@@ -34,6 +36,24 @@ jobs:
           grep -q 'id="additional-experience"' index.html
           grep -q 'aria-label="Instagram"' index.html
           grep -q 'Cloudflare' index.html
+
+      - name: Persist approved portfolio to main index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish approved visual portfolio as index"
+            git push origin HEAD:main
+          else
+            echo "Approved portfolio is already stored in main/index.html"
+          fi
+
+      - name: Prepare Pages artifact
+        shell: bash
+        run: |
           rm -rf .site .resume
 
       - name: Add favicon
