@@ -39,10 +39,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gzip -dc .resume_exact/uploaded-resume.pdf.gz > Hamza_Arshad_Resume.pdf
-          test -s Hamza_Arshad_Resume.pdf
-          test "$(head -c 4 Hamza_Arshad_Resume.pdf)" = "%PDF"
-          echo "b9c93cc0473124cb6da95b260962c9f5a050c8bc3789a51a9f279be3061eb521  Hamza_Arshad_Resume.pdf" | sha256sum -c -
+          gzip -dc .resume_exact/uploaded-resume.pdf.gz > Hamza_Arshad_Resume_20260824.pdf
+          test -s Hamza_Arshad_Resume_20260824.pdf
+          test "$(head -c 4 Hamza_Arshad_Resume_20260824.pdf)" = "%PDF"
+          echo "b9c93cc0473124cb6da95b260962c9f5a050c8bc3789a51a9f279be3061eb521  Hamza_Arshad_Resume_20260824.pdf" | sha256sum -c -
+          cp Hamza_Arshad_Resume_20260824.pdf Hamza_Arshad_Resume.pdf
+          sed -i 's/Hamza_Arshad_Resume\.pdf/Hamza_Arshad_Resume_20260824.pdf/g' index.html
+          grep -q 'Hamza_Arshad_Resume_20260824.pdf' index.html
           rm -rf .site .resume .resume_exact .resume_fixed .resume_web
 
       - name: Add favicon
