@@ -28,7 +28,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          tr -d '\n\r ' < .site/premium-index.html.gz.b64 | base64 --decode | gzip -dc > index.html
+          cat .site/p*.b64 | tr -d '\n\r ' | base64 --decode | gzip -dc > index.html
           grep -q 'id="visuals"' index.html
           grep -q 'Transformation Dashboard' index.html
           grep -q 'id="additional-experience"' index.html
