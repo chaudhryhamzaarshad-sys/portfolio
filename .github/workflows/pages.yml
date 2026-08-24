@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Build premium visual portfolio
         shell: bash
@@ -34,7 +36,20 @@ jobs:
           grep -q 'id="additional-experience"' index.html
           grep -q 'aria-label="Instagram"' index.html
           grep -q 'Cloudflare' index.html
-          rm -rf .site
+
+      - name: Persist premium portfolio to main for Vercel
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Deploy premium visual portfolio"
+            git push origin HEAD:main
+          else
+            echo "Premium portfolio is already stored in index.html"
+          fi
 
       - name: Build downloadable resume
         shell: bash
@@ -51,7 +66,7 @@ jobs:
               echo 'Resume reconstruction failed; site deployment will continue without a broken PDF.'
             fi
           fi
-          rm -rf .resume
+          rm -rf .resume .site
 
       - name: Add favicon
         shell: bash
