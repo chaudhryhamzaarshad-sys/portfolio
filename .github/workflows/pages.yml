@@ -49,7 +49,7 @@ jobs:
               path.write_text(html, encoding="utf-8")
           PY
 
-      - name: Expand core competencies and technical skills
+      - name: Expand technical skills
         shell: bash
         run: |
           python - <<'PY'
@@ -57,11 +57,6 @@ jobs:
 
           path = Path("index.html")
           html = path.read_text(encoding="utf-8")
-
-          profile_start = html.index('<section id="profile">')
-          profile_end = html.index('<section class="impact" id="impact">')
-          profile = '''<section id="profile"><div class="wrap about"><div class="darkCard"><div class="label" style="color:#9ce7d8">Professional Profile</div><h2 style="font-size:36px">Strategy that reaches the warehouse floor.</h2><p>My experience spans end-to-end supply chain management, data analytics, demand and supply planning, S&amp;OP, IBP, CPFR, strategic sourcing, procurement, vendor relationship management, inventory optimization, warehouse operations, logistics, asset recovery, business intelligence, ERP systems and supply chain finance.</p><p class="quote">I focus on decisions that improve availability, accuracy, working capital, visibility and execution.</p></div><div><div class="label">Core Competencies</div><h2>End-to-end supply chain leadership</h2><div class="caps"><div class="cap"><b>Strategy &amp; Planning</b><p>End-to-End Supply Chain Management &amp; Data Analytics | Demand &amp; Supply Planning | S&amp;OP &amp; Integrated Business Planning (IBP) | CPFR (Collaborative Planning, Forecasting, and Replenishment)</p></div><div class="cap"><b>Operations &amp; Logistics</b><p>Strategic Sourcing, Procurement &amp; Vendor Relationship Management (VRM) | Inventory Optimization &amp; Lifecycle Management | Warehouse Management &amp; Facility Layout Optimization | Inbound &amp; Outbound Logistics | Asset Recovery &amp; Obsolescence Management</p></div></div></div></div></section>\n'''
-          html = html[:profile_start] + profile + html[profile_end:]
 
           skills_start = html.index('<section id="skills">')
           skills_end = html.index('<section id="education">')
