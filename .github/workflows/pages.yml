@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -23,38 +23,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Build approved premium portfolio
         shell: bash
         run: |
           set -euo pipefail
-          cat .site/p[0-9][0-9].b64 | tr -d '\n\r ' | base64 --decode | gzip -dc > index.html
+          cat .site/p01.b64 .site/p02.b64 .site/p03.b64 .site/p04.b64 .site/p05.b64 | tr -d '\n\r ' | base64 --decode | gzip -dc > index.html
           grep -q 'id="visuals"' index.html
           grep -q 'Transformation Dashboard' index.html
           grep -q 'id="additional-experience"' index.html
           grep -q 'aria-label="Instagram"' index.html
           grep -q 'Cloudflare' index.html
 
-      - name: Persist approved portfolio to main index
+      - name: Attach exact uploaded resume
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if ! git diff --cached --quiet; then
-            git commit -m "Publish approved visual portfolio as index"
-            git push origin HEAD:main
-          else
-            echo "Approved portfolio is already stored in main/index.html"
-          fi
-
-      - name: Prepare Pages artifact
-        shell: bash
-        run: |
-          rm -rf .site .resume
+          gzip -dc .resume_exact/uploaded-resume.pdf.gz > Hamza_Arshad_Resume.pdf
+          test -s Hamza_Arshad_Resume.pdf
+          test "$(head -c 4 Hamza_Arshad_Resume.pdf)" = "%PDF"
+          echo "b9c93cc0473124cb6da95b260962c9f5a050c8bc3789a51a9f279be3061eb521  Hamza_Arshad_Resume.pdf" | sha256sum -c -
+          rm -rf .site .resume .resume_exact .resume_fixed .resume_web
 
       - name: Add favicon
         shell: bash
