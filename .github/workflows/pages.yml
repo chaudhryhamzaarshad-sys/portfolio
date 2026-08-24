@@ -49,6 +49,28 @@ jobs:
               path.write_text(html, encoding="utf-8")
           PY
 
+      - name: Expand core competencies and technical skills
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("index.html")
+          html = path.read_text(encoding="utf-8")
+
+          profile_start = html.index('<section id="profile">')
+          profile_end = html.index('<section class="impact" id="impact">')
+          profile = '''<section id="profile"><div class="wrap about"><div class="darkCard"><div class="label" style="color:#9ce7d8">Professional Profile</div><h2 style="font-size:36px">Strategy that reaches the warehouse floor.</h2><p>My experience spans end-to-end supply chain management, data analytics, demand and supply planning, S&amp;OP, IBP, CPFR, strategic sourcing, procurement, vendor relationship management, inventory optimization, warehouse operations, logistics, asset recovery, business intelligence, ERP systems and supply chain finance.</p><p class="quote">I focus on decisions that improve availability, accuracy, working capital, visibility and execution.</p></div><div><div class="label">Core Competencies</div><h2>End-to-end supply chain leadership</h2><div class="caps"><div class="cap"><b>Strategy &amp; Planning</b><p>End-to-End Supply Chain Management &amp; Data Analytics | Demand &amp; Supply Planning | S&amp;OP &amp; Integrated Business Planning (IBP) | CPFR (Collaborative Planning, Forecasting, and Replenishment)</p></div><div class="cap"><b>Operations &amp; Logistics</b><p>Strategic Sourcing, Procurement &amp; Vendor Relationship Management (VRM) | Inventory Optimization &amp; Lifecycle Management | Warehouse Management &amp; Facility Layout Optimization | Inbound &amp; Outbound Logistics | Asset Recovery &amp; Obsolescence Management</p></div></div></div></div></section>\n'''
+          html = html[:profile_start] + profile + html[profile_end:]
+
+          skills_start = html.index('<section id="skills">')
+          skills_end = html.index('<section id="education">')
+          skills = '''<section id="skills"><div class="wrap"><div class="head"><div><div class="label">Technical Skills</div><h2>Enterprise systems, analytics &amp; digital toolkit</h2></div><p>A comprehensive toolkit supporting supply chain execution, analytics, planning, workflow automation, collaboration and digital development.</p></div><div class="skillGrid"><div class="skill"><h3>ERP &amp; Data Management</h3><div class="chips"><span class="chip">SAP GUI</span><span class="chip">SAP MM</span><span class="chip">SAP S/4HANA</span><span class="chip">SAP BW</span><span class="chip">SAP Ariba Buying</span><span class="chip">Microsoft Dynamics 365</span><span class="chip">Microsoft Dynamics AX</span><span class="chip">Microsoft Dynamics GP</span><span class="chip">Microsoft Dynamics CRM</span><span class="chip">Oracle NetSuite</span><span class="chip">Kinaxis RapidResponse</span><span class="chip">Basware</span><span class="chip">QuickBooks</span><span class="chip">Salesforce</span><span class="chip">Workday</span><span class="chip">IBM Tririga</span><span class="chip">Crunchtime</span></div></div><div class="skill"><h3>Analytics, BI &amp; Reporting</h3><div class="chips"><span class="chip">Microsoft Power BI</span><span class="chip">Python</span><span class="chip">Tableau</span><span class="chip">Google Analytics</span><span class="chip">SPSS</span><span class="chip">EViews</span><span class="chip">ACADiA</span><span class="chip">SQL</span></div></div><div class="skill"><h3>AI Productivity &amp; Tooling</h3><div class="chips"><span class="chip">Google Gemini</span><span class="chip">OpenAI ChatGPT</span><span class="chip">Codex</span><span class="chip">Anthropic Claude</span><span class="chip">Google Antigravity</span><span class="chip">Google AI Studio</span><span class="chip">Cursor</span><span class="chip">Grok</span><span class="chip">Prompt Engineering</span><span class="chip">Advanced Prompting</span><span class="chip">AI-Assisted Data Analysis</span><span class="chip">Workflow Automation</span></div></div><div class="skill"><h3>Project &amp; Workflow Management</h3><div class="chips"><span class="chip">Microsoft Project</span><span class="chip">Asana</span><span class="chip">Jira</span><span class="chip">Trello</span><span class="chip">Smartsheet</span><span class="chip">Zoho</span><span class="chip">Client Central</span></div></div><div class="skill"><h3>Productivity, Collaboration &amp; Digital Tools</h3><div class="chips"><span class="chip">Microsoft 365</span><span class="chip">SharePoint</span><span class="chip">Google Workspace</span><span class="chip">Prezi</span><span class="chip">Google AdSense</span></div></div><div class="skill"><h3>Design &amp; Web Development Tools</h3><div class="chips"><span class="chip">GitHub</span><span class="chip">Cloudflare</span><span class="chip">Vercel</span><span class="chip">Adobe Photoshop</span><span class="chip">Adobe Dreamweaver</span><span class="chip">Adobe Illustrator</span><span class="chip">WordPress</span></div></div></div></div></section>\n'''
+          html = html[:skills_start] + skills + html[skills_end:]
+
+          path.write_text(html, encoding="utf-8")
+          PY
+
       - name: Add social icons to footer
         shell: bash
         run: |
