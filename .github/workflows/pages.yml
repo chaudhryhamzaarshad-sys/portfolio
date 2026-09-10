@@ -24,38 +24,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build approved premium portfolio
+      - name: Prepare approved portfolio and existing live resume
         shell: bash
         run: |
           set -euo pipefail
-          cat .site/p01.b64 .site/p02.b64 .site/p03.b64 .site/p04.b64 .site/p05.b64 | tr -d '\n\r ' | base64 --decode | gzip -dc > index.html
-          grep -q 'id="visuals"' index.html
-          grep -q 'Transformation Dashboard' index.html
+          # index.html is the approved source; do not overwrite it with the legacy archive.
+          grep -q 'id="hamza-executive"' index.html
+          grep -q 'id="visual-impact"' index.html
+          grep -q 'The impact observatory' index.html
           grep -q 'id="additional-experience"' index.html
-          grep -q 'aria-label="Instagram"' index.html
+          grep -q 'Instagram' index.html
           grep -q 'Cloudflare' index.html
-
-      - name: Attach exact uploaded resume
-        shell: bash
-        run: |
-          set -euo pipefail
-          gzip -dc .resume_exact/uploaded-resume.pdf.gz > Hamza_Arshad_Resume_20260824_014348.pdf
-          test -s Hamza_Arshad_Resume_20260824_014348.pdf
-          test "$(head -c 4 Hamza_Arshad_Resume_20260824_014348.pdf)" = "%PDF"
-          echo "b9c93cc0473124cb6da95b260962c9f5a050c8bc3789a51a9f279be3061eb521  Hamza_Arshad_Resume_20260824_014348.pdf" | sha256sum -c -
-          cp Hamza_Arshad_Resume_20260824_014348.pdf Hamza_Arshad_Resume.pdf
-          sed -i 's/Hamza_Arshad_Resume\.pdf/Hamza_Arshad_Resume_20260824_014348.pdf/g' index.html
-          grep -q 'Hamza_Arshad_Resume_20260824_014348.pdf' index.html
-          rm -rf .site .resume .resume_exact .resume_fixed .resume_web
-
-      - name: Add favicon
-        shell: bash
-        run: |
-          if [ ! -f favicon.svg ]; then
-            cat > favicon.svg <<'SVG'
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0b1726"/><text x="32" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#ffffff">HA</text></svg>
-          SVG
-          fi
+          grep -q 'Hamza_Arshad_Resume.pdf' index.html
+          # Preserve the PDF currently served by hamzaarshad.me, byte for byte.
+          test "$(head -c 4 Hamza_Arshad_Resume.pdf)" = "%PDF"
+          echo "855e4b6508c83340ed56c320755259de859355f3ed501b3230b486021e1a1269  Hamza_Arshad_Resume.pdf" | sha256sum -c -
+          mkdir -p _site
+          cp index.html Hamza_Arshad_Resume.pdf CNAME _site/
+          if [ -f favicon.svg ]; then cp favicon.svg _site/; fi
+          touch _site/.nojekyll
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -63,7 +50,7 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
 
       - name: Deploy to GitHub Pages
         id: deployment
